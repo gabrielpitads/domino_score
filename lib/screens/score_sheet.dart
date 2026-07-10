@@ -332,7 +332,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
         decoration: BoxDecoration(
           color: const Color(0xFF201F1F),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: accentColor.withOpacity(0.25)),
+          border: Border.all(color: accentColor.withValues(alpha: 0.25)),
         ),
         child: Column(
           children: [
@@ -394,7 +394,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                   vertical: 12,
                 ),
                 itemCount: player.history.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                separatorBuilder: (_, _) => const SizedBox(height: 4),
                 itemBuilder: (context, itemIndex) {
                   final entry = player.history[itemIndex];
                   return Row(
