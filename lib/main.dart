@@ -1,6 +1,7 @@
 import 'package:domino_score/screens/app_shell.dart';
 import 'package:domino_score/services/game_history.dart';
 import 'package:domino_score/services/settings_service.dart';
+import 'package:domino_score/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -11,13 +12,18 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.locale});
+
+  final Locale? locale;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Domino Score',
       debugShowCheckedModeBanner: false,
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(

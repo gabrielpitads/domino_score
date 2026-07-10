@@ -1,4 +1,5 @@
 import 'package:domino_score/services/game_history.dart';
+import 'package:domino_score/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -17,13 +18,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFF131313),
       appBar: AppBar(
         backgroundColor: const Color(0xFF131313),
         foregroundColor: const Color(0xFFCDFFDC),
-        title: const Text(
-          'HISTORY',
+        title: Text(
+          l10n.historyTitle,
           style: TextStyle(
             color: Color(0xFFCDFFDC),
             fontSize: 28,
@@ -38,10 +41,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         valueListenable: GameHistoryService.instance.entries,
         builder: (context, entries, _) {
           if (entries.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                'No completed games yet',
-                style: TextStyle(color: Color(0xFFB9CCBD)),
+                l10n.noGamesYet,
+                style: const TextStyle(color: Color(0xFFB9CCBD)),
               ),
             );
           }
@@ -63,7 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'GAME ${entries.length - index}',
+                      l10n.gameNumber(entries.length - index),
                       style: const TextStyle(
                         color: Color(0xFFCDFFDC),
                         fontWeight: FontWeight.w700,
@@ -81,7 +84,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'WINNER: ${entry.winnerName}',
+                      l10n.winner(entry.winnerName),
                       style: const TextStyle(
                         color: Color(0xFF00f59b),
                         fontWeight: FontWeight.w700,

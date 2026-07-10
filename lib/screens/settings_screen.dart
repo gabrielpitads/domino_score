@@ -1,4 +1,5 @@
 import 'package:domino_score/services/settings_service.dart';
+import 'package:domino_score/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _pointsToWin = SettingsService.instance.pointsToWin;
 
   Future<void> _openPointsDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController(text: _pointsToWin.toString());
 
     final accepted = await showDialog<bool>(
@@ -25,9 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
           contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-          title: const Text(
-            'Points to win',
-            style: TextStyle(
+          title: Text(
+            l10n.pointsToWinDialogTitle,
+            style: const TextStyle(
               color: Color(0xFFCDFFDC),
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -40,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             textInputAction: TextInputAction.done,
             style: const TextStyle(color: Color(0xFFCDFFDC)),
             decoration: InputDecoration(
-              hintText: '100',
+              hintText: l10n.defaultPointsHint,
               hintStyle: const TextStyle(color: Color(0xFF8FA08F)),
               filled: true,
               fillColor: const Color(0xFF161616),
@@ -62,9 +64,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Color(0xFFB9CCBD)),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(color: Color(0xFFB9CCBD)),
               ),
             ),
             ElevatedButton(
@@ -77,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   dialogContext,
                 ).pop(int.tryParse(controller.text) != null);
               },
-              child: const Text('ACCEPT'),
+              child: Text(l10n.accept),
             ),
           ],
         );
@@ -101,13 +103,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFF131313),
       appBar: AppBar(
         backgroundColor: const Color(0xFF131313),
         foregroundColor: const Color(0xFFCDFFDC),
-        title: const Text(
-          'SETTINGS',
+        title: Text(
+          l10n.settingsTitle,
           style: TextStyle(
             color: Color(0xFFCDFFDC),
             fontSize: 28,
@@ -124,9 +128,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'GAME PREFERENCES',
-                style: TextStyle(
+              Text(
+                l10n.gamePreferences,
+                style: const TextStyle(
                   color: Color(0xFF8FA08F),
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -149,9 +153,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'POINTS TO WIN',
-                              style: TextStyle(
+                            Text(
+                              l10n.pointsToWin,
+                              style: const TextStyle(
                                 color: Color(0xFFCDFFDC),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -159,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Current value: $_pointsToWin',
+                              l10n.currentValue(_pointsToWin),
                               style: const TextStyle(
                                 color: Color(0xFFB9CCBD),
                                 fontSize: 13,
