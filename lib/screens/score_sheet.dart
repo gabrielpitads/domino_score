@@ -1,3 +1,4 @@
+import 'package:domino_score/l10n/app_localizations.dart';
 import 'package:domino_score/services/game_history.dart';
 import 'package:domino_score/services/settings_service.dart';
 import 'package:flutter/material.dart';
@@ -41,14 +42,27 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
   @override
   void initState() {
     super.initState();
-    _players = <_PlayerScoreState>[
-      _PlayerScoreState(name: 'PLAYER 1', initialScore: 0),
-      _PlayerScoreState(name: 'PLAYER 2', initialScore: 0),
-    ];
+    _players = <_PlayerScoreState>[];
     _actionHistory = <_ScoreEvent>[];
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_players.isNotEmpty) {
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    _players.addAll(<_PlayerScoreState>[
+      _PlayerScoreState(name: l10n.player1, initialScore: 0),
+      _PlayerScoreState(name: l10n.player2, initialScore: 0),
+    ]);
+  }
+
   Future<void> _showVictoryDialog(String winnerName) async {
+    final l10n = AppLocalizations.of(context)!;
+
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -61,16 +75,16 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
           contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           title: Text(
-            '$winnerName WINS!',
+            l10n.victoryTitle(winnerName),
             style: const TextStyle(
               color: Color(0xFFCDFFDC),
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
           ),
-          content: const Text(
-            'The round is over. Start a new game?',
-            style: TextStyle(color: Color(0xFFB9CCBD)),
+          content: Text(
+            l10n.victoryMessage,
+            style: const TextStyle(color: Color(0xFFB9CCBD)),
           ),
           actions: [
             ElevatedButton(
@@ -95,7 +109,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                   _actionHistory.clear();
                 });
               },
-              child: const Text('ACCEPT'),
+              child: Text(l10n.accept),
             ),
           ],
         );
@@ -104,6 +118,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
   }
 
   Future<void> _addToPlayer(int index) async {
+    final l10n = AppLocalizations.of(context)!;
     final player = _players[index];
     final controller = TextEditingController();
 
@@ -118,9 +133,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           ),
           titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
           contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-          title: const Text(
-            'How many points?',
-            style: TextStyle(
+          title: Text(
+            l10n.howManyPoints,
+            style: const TextStyle(
               color: Color(0xFFCDFFDC),
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -153,9 +168,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Color(0xFFB9CCBD)),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(color: Color(0xFFB9CCBD)),
               ),
             ),
             ElevatedButton(
@@ -166,7 +181,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
               onPressed: () {
                 Navigator.of(dialogContext).pop(int.tryParse(controller.text));
               },
-              child: const Text('ADD'),
+              child: Text(l10n.add),
             ),
           ],
         );
@@ -179,7 +194,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
 
     setState(() {
       final entry = _RoundEntry(
-        label: 'ROUND ${player.history.length + 1}',
+        label: l10n.roundLabel(player.history.length + 1),
         value: value,
       );
       player.score += value;
@@ -193,6 +208,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
   }
 
   Future<void> _restartScores() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -204,9 +220,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           ),
           titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
           contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-          title: const Text(
-            'Are you sure you want to restart?',
-            style: TextStyle(
+          title: Text(
+            l10n.restartConfirmation,
+            style: const TextStyle(
               color: Color(0xFFCDFFDC),
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -215,9 +231,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Color(0xFFB9CCBD)),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(color: Color(0xFFB9CCBD)),
               ),
             ),
             ElevatedButton(
@@ -226,7 +242,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                 foregroundColor: const Color(0xFF003920),
               ),
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('ACCEPT'),
+              child: Text(l10n.accept),
             ),
           ],
         );
@@ -247,6 +263,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
   }
 
   Future<void> _undoLastEntry() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -258,9 +275,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           ),
           titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
           contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-          title: const Text(
-            'Are you sure you want to undo the last round?',
-            style: TextStyle(
+          title: Text(
+            l10n.undoConfirmation,
+            style: const TextStyle(
               color: Color(0xFFCDFFDC),
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -269,9 +286,9 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Color(0xFFB9CCBD)),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(color: Color(0xFFB9CCBD)),
               ),
             ),
             ElevatedButton(
@@ -280,7 +297,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                 foregroundColor: const Color(0xFF003920),
               ),
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('ACCEPT'),
+              child: Text(l10n.accept),
             ),
           ],
         );
@@ -304,6 +321,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
   }
 
   Widget _buildPlayerCard(int index) {
+    final l10n = AppLocalizations.of(context)!;
     final player = _players[index];
     const accentColor = Color(0xFF00f59b);
     const secondaryTextColor = Color(0xFFB9CCBD);
@@ -408,7 +426,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: () => _addToPlayer(index),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accentColor,
@@ -418,8 +436,15 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  icon: const Icon(Icons.add_circle, size: 18),
-                  label: Text('ADD TO ${player.name}'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.add_circle, size: 18),
+                      const SizedBox(width: 8),
+                      Text(l10n.addToPlayer(player.name)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -431,12 +456,14 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFF131313),
       appBar: AppBar(
         backgroundColor: const Color(0xFF131313),
-        title: const Text(
-          'DOMINO SCORE',
+        title: Text(
+          l10n.scoreSheetTitle,
           style: TextStyle(
             color: Color(0xFFCDFFDC),
             fontSize: 28,
@@ -476,7 +503,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                         ),
                       ),
                       icon: const Icon(Icons.refresh),
-                      label: const Text('RESTART'),
+                      label: Text(l10n.restart),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -492,7 +519,7 @@ class _ScoreSheetScreenState extends State<ScoreSheetScreen> {
                         ),
                       ),
                       icon: const Icon(Icons.undo),
-                      label: const Text('UNDO'),
+                      label: Text(l10n.undo),
                     ),
                   ),
                 ],

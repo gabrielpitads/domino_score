@@ -26,6 +26,16 @@ void main() {
     expect(find.text('Settings'), findsOneWidget);
   });
 
+  testWidgets('uses Spanish strings when a Spanish locale is provided', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp(locale: Locale('es')));
+
+    expect(find.text('PUNTUACIÓN DOMINÓ'), findsOneWidget);
+    expect(find.text('Puntaje'), findsOneWidget);
+    expect(find.text('Configuración'), findsOneWidget);
+  });
+
   testWidgets('shows the settings entry for points to win', (tester) async {
     await tester.pumpWidget(const MyApp());
     await tester.tap(find.text('Settings'));
